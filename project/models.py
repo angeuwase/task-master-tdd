@@ -17,10 +17,8 @@ class User(db.Model, UserMixin):
     def is_password_valid(self, password):
         return check_password_hash(self.hashed_password, password)
 
+
     def __repr__(self):
         return '<User {}>'.format(self.id)
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))

@@ -5,12 +5,15 @@ from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
 import os
 
+
 # Instantiate Flask Extension Objects
 db = SQLAlchemy()
 db_migration = Migrate()
 bootstrap = Bootstrap()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
+
+
 
 # Application Factory Function
 def create_app():
@@ -65,6 +68,11 @@ def initialize_extensions(app):
     db_migration.init_app(app,db)
     bootstrap.init_app(app)
     login_manager.init_app(app)
+    from project.models import User
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
 
 def register_error_handlers(app):
     from flask import render_template
