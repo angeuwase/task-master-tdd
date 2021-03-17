@@ -1,4 +1,4 @@
-from project import create_app
+from project import create_app, db
 #from project import db
 #from project.models import User, Task
 
