@@ -4,11 +4,40 @@
 
 {% block title  %}Login{% endblock  %}
 
-{% block content  %} 
+{%  block   navbar  %}
+{% if current_user.is_authenticated %}
+{% include 'navbar_logged_in.html' %}
+{% else %}
+{% include 'navbar_not_logged_in.html' %}
+{% endif %}
+{%  endblock  %}
 
+{% block content  %} 
 {% include 'flash_messages.html' %}
 
+<div class="container" >
+    <div class="col-md-4 col-md-offset-4" >
+        <div class='text-center h1 text-white bg-primary' style='padding:10px 0px;'>Login</div>
+        <hr>
+        <form action="" method="post" class="form" role="form" >
+            {{ form.hidden_tag() }}
+        
+            <div class="form-group ">
+            {{ wtf.form_field(form.username, type='text', class='form-control', placeholder='User Name') }}
+            </div>
+        
+            <div class="form-group">
+            {{ wtf.form_field(form.password, type='password', class='form-control', placeholder='Password') }}
+            </div>
+        
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+        </form>
+        <hr>
+        <p>Don't have an account?</p>
+        <p><a href="{{url_for('auth.register')}}">Register here</a></p>
+    </div>
 
+    </div>
 
 
 {% endblock  %}

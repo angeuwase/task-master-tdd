@@ -8,7 +8,7 @@ def new_user():
     """
     A fixture that instantiates an object of the User class. Used to test the User model.
     """
-    user = User('default_user', 'password123')
+    user = User('admin', 'password123')
     return user
 
 @pytest.fixture(scope='session')
@@ -40,7 +40,18 @@ def register_default_user(test_client):
     """
     A fixture that takes a user object and adds them to the database so that they can be a registered user of the application. Used by login functional tests to test the login functionality.
     """
-    test_client.post('/register', data={'username': 'default_user', 'password':'password123', 'confirm_password': 'password123'})
+    test_client.post('/register', data={'username': 'default_user', 'password':'password123', 'confirm_password': 'password123'}, follow_redirects=True)
     return
 
-    
+@pytest.fixture(scope='function')
+def login_default_user(test_client, register_default_user):
+    """
+    A fixture that logs in and logs out the default user obejct. Used by login functional tests to test the login functionality (login when a user is already logged in).
+    """
+    test_client.post('/login', data={'username': 'default_user', 'password':'password123'}, follow_redirects=True)
+
+    yield
+
+    test_client.get('/logout')
+
+

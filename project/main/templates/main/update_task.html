@@ -1,0 +1,13 @@
+{% extends 'bootstrap/base.html'  %} 
+
+
+
+{% block title  %}Update Task{% endblock  %}
+
+{%  block   navbar  %}
+{% if current_user.is_authenticated %}
+{% include 'navbar_logged_in.html' %}
+{% else %}
+{% include 'navbar_not_logged_in.html' %}
+{% endif %}
+{%  endblock  %}
