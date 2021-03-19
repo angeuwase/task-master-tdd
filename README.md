@@ -14,4 +14,7 @@ The application is organised using flask blueprints.
 
 Other features include:  
 *logging  
-*custom error pages
+*custom error pages   
+*flash messaging  
+
+Testing done using Pytest

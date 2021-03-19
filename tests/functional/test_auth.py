@@ -214,7 +214,7 @@ def test_profile_logged_in(test_client, login_default_user):
     assert b'You are logged in as:' in response.data
     assert b'User Name: default_user' in response.data
 
-@pytest.mark.parametrize('url', ['/register', '/login', '/profile', '/', '/tasks', '/update_task'])
+@pytest.mark.parametrize('url', ['/register', '/login', '/profile', '/', '/tasks'])
 def test_navbar_not_logged_in(test_client, url):
     """
     GIVEN a flask application
@@ -229,7 +229,7 @@ def test_navbar_not_logged_in(test_client, url):
     assert b'REGISTER' in response.data
     assert b'LOGIN' in response.data
 
-@pytest.mark.parametrize('url', ['/register', '/login', '/profile', '/', '/tasks', '/update_task'])
+@pytest.mark.parametrize('url', ['/register', '/login', '/profile', '/', '/tasks'])
 def test_navbar_logged_in(test_client, url, login_default_user):
     """
     GIVEN a flask application
