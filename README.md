@@ -4,7 +4,7 @@ Task Master Application developed using TDD principles
 
 This is a full feature CRUD application that allows a user to:  
 *create an account using a username and password  
-*login and logout
+*login and logout  
 *add tasks, delete tasks, update tasks  
 *mark tasks as complete and view a list of completed tasks  
 

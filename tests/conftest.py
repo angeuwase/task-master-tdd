@@ -1,6 +1,7 @@
 import pytest
-from project.models import User
+from project.models import User, Task
 from project import create_app, db
+from datetime import datetime
 
 
 @pytest.fixture(scope='module')
@@ -10,6 +11,14 @@ def new_user():
     """
     user = User('admin', 'password123')
     return user
+
+@pytest.fixture(scope='module')
+def new_task():
+    """
+    A fixture that instantiates an object of the Task class. Used to test the Task model.
+    """
+    task = Task(content='Learn docker', user_id=17, date_created=datetime(2021, 3, 19))
+    return task
 
 @pytest.fixture(scope='session')
 def test_client():

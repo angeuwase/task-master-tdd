@@ -1,5 +1,5 @@
 {% extends 'bootstrap/base.html'  %} 
-
+{% import 'bootstrap/wtf.html' as wtf %}
 
 
 {% block title  %}Tasks{% endblock  %}
@@ -11,3 +11,84 @@
 {% include 'navbar_not_logged_in.html' %}
 {% endif %}
 {%  endblock  %}
+
+{% block content    %}
+{% include 'flash_messages.html' %}
+<div class='container'>
+    <div class='text-center h1 text-white bg-primary'>Add a new task</div>
+    <form action="" method="post" class="form" role="form" >
+        {{ form.hidden_tag() }}
+    
+        <div class="form-group ">
+        {{ wtf.form_field(form.new_task, type='text', class='form-control', placeholder='Task') }}
+        </div>   
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <hr>
+    <div class='row'>
+        
+        <div class='col-md-6'>
+            <div class='text-center h1 text-white bg-primary'>To do</div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>Task</td>
+                            <td>Date Created</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for task in tasks %}
+                        {% if not task.completed%}
+                        <tr>
+                            <td>{{task.content}}</td>
+                            <td>{{task.date_created.strftime("%Y-%m-%d")}}</td>
+                            <td><a href="{{ url_for('main.delete_task', task_id= task.id) }}">Delete</a><br><a href="{{ url_for('main.update_task', task_id= task.id) }}">Update</a><br><a href="{{ url_for('main.mark_complete', task_id= task.id) }}">Mark as complete</a></td>
+                        </tr>
+                        {%  endif   %}
+                        {%  endfor  %}
+
+
+                    </tbody>
+                  
+                </table>
+              </div>
+
+            <div>
+                
+
+            </div>
+            
+            
+
+        </div>
+        <div class='col-md-6'>
+            <div class='text-center h1 text-white bg-primary'>Completed tasks</div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>Task</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for task in tasks %}
+                        {% if task.completed%}
+                        <tr>
+                            <td>{{task.content}}</td>
+                        </tr>
+                        {%  endif   %}
+                        {%  endfor  %}
+
+
+                    </tbody>
+                  
+                </table>
+              </div>
+
+        </div>
+    </div>
+</div>
+
+{%  endblock    %}

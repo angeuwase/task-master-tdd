@@ -10,3 +10,9 @@ class RegistrationForm(FlaskForm):
 class LoginForm(FlaskForm):
     username = StringField('User Name', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6, max=120)])
+
+class NewTask(FlaskForm):
+    new_task = StringField('Task', validators=[DataRequired()])
+
+class UpdateTask(FlaskForm):
+    updated_task = StringField('Task', validators=[DataRequired()])
