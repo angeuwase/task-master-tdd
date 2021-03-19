@@ -223,3 +223,4 @@ def test_post_update_task_missing_field(test_client, login_default_user):
     assert b'Task' in response.data
     assert b'Submit' in response.data
     assert b'Error in the form!' in response.data
+

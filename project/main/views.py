@@ -60,6 +60,16 @@ def mark_complete(task_id):
     current_app.logger.info('Task completed: {}'.format(task_id))
     return redirect(url_for('main.tasks'))
 
+@main_blueprint.route('/clear_completed')
+@login_required
+def clear_completed():
+    tasks = Task.query.filter_by(completed=True).all()
+    for task in tasks:
+        db.session.delete(task)
+    db.session.commit()
+    flash('Completed list cleared')
+    current_app.logger.info('Completed list cleared')
+    return redirect(url_for('main.tasks'))
 
 
 @main_blueprint.route('/update_task/<int:task_id>', methods=['GET', 'POST'])
@@ -80,6 +90,7 @@ def update_task(task_id):
             return redirect(url_for('main.update_task', task_id=task_id))
 
     return render_template('main/update_task.html', form=form, task=task)
+
 
 @main_blueprint.route('/500')
 def error_500():
