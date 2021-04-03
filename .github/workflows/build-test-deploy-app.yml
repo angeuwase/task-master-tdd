@@ -6,7 +6,9 @@ on:
   push:
     branches: [ main ]
 jobs:
-  build:
+
+  # First Job: Build the project and run the tests
+  build-test:
 
     runs-on: ubuntu-latest
 
