@@ -33,5 +33,15 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-  
         python -m pytest
+    - name: Print job completion message
+      run: echo "CI part finished successfully" 
+
+# configure environment variables for job 2
+env:
+   EB_S3_BUCKET_NAME	: "githubactions-deployment-packages"
+   EB_APPLICATION_NAME	: "taskmaster"
+   EB_ENVIRONMENT_NAME	: "Taskmaster-env"
+   EB_DEPLOY_PACKAGE_NAME : "taskmaster-app-${{ github.sha }}.zip "
+   EB_AWS_REGION_NAME : "eu-west-2"
+
