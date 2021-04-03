@@ -18,6 +18,7 @@ jobs:
         python-version: 3.8
     - name: Install dependencies
       run: |
+        # create instance folder where log file and db file are saved. Its gitignored when code is pushed to master
         mkdir instance
         python -m pip install --upgrade pip
         pip install flake8 pytest
