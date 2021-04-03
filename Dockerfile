@@ -1,13 +1,13 @@
 # Use official python docker base image
 FROM python:3.8-slim
 
-# Set the default working directory where the project will be installed on the container. HOME directory created when new user was created. Making the HOME directory the default directory
+# Set the default working directory of the project on the container
 WORKDIR /app
 
-# Copy the requirements.txt file over to the container. Source file location is relative to location of the Dockerfile. Destination can be absolute path or relative to WORKDIR
+# Copy the requirements.txt file over to the container. 
 COPY requirements.txt requirements.txt
 
-# Install installl dependencies. gunicorn (production WSGI server) has been added to requirements.txt file
+# Install dependencies and gunicorn (production WSGI server) 
 RUN pip install -r requirements.txt
 RUN pip install gunicorn
 
@@ -17,7 +17,7 @@ COPY . .
 # Configure the flask app for production
 ENV FLASK_ENV = production
 
-# Configure port 5000 to be the port that this container will be using for its server. This is necessary so that Docker can configure the network in the container appropriately.
+# Configure the container to listen to requests on port 5000. This is necessary so that Docker can configure the network in the container appropriately.
 EXPOSE 5000
 
 # Run the server with gunicorn
