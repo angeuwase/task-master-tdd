@@ -8,21 +8,11 @@ on:
   push:
     branches:
     - master
-
-# configure environment variables
-env:
-   EB_S3_BUCKET_NAME	: " "
-   EB_APPLICATION_NAME	: " "
-   EB_ENVIRONMENT_NAME	: " "
-   EB_DEPLOY_PACKAGE_NAME : "flask-app-${{ github.sha }}.zip "
-   EB_AWS_REGION_NAME : " "
-
     
 jobs:
 
   # First Job: Build the project and run the tests
   build-test-:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
