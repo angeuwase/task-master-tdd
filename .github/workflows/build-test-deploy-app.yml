@@ -8,10 +8,15 @@
 
 
 
-# This workflow will install Python dependencies, run tests and lint with a single version of Python.
-#If tests are passed it will zip the project and deploy it to AWS using Elastic Beanstalk.
 
-name: Build-test-deploy
+
+
+# This workflow will:
+# 1. Run unit and functional tests on the code
+# 2. Build the docker image and test the docker image 
+# 3. Deploy to AWS using Elastic Beanstalk.
+
+name: Build-Test-Deploy
 
 on:
   push:
@@ -22,7 +27,7 @@ jobs:
   build-test:
 
     runs-on: ubuntu-latest
-
+    
     steps:
     - uses: actions/checkout@v2
     
@@ -39,9 +44,6 @@ jobs:
         pip install flake8 pytest
         pip install -r requirements.txt
         
-    - name: Build test docker image
-      run: docker build -f Dockerfile.test -t test_taskmaster:latest .
-        
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -54,9 +56,51 @@ jobs:
         python -m pytest
         
     - name: Print job completion message
-      run: echo "CI part finished successfully" 
+      run: echo "Code built and tested successfully." 
    
-  # Second job: package the project into a zip file and deploy to EB
+  # Second job: build and test docker image
+  docker-image:
+    runs-on: ubuntu-latest
+    needs: [build-test]
+    
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Build docker image
+        run: docker build --tag taskmaster:latest .
+        
+      - name: Check that image isnt broken (container runs)
+        run: docker run -t -d --name taskmaster_container -p 5000:5000 taskmaster:latest httpd
+        
+      - name: Print job completion message
+        run: echo "Docker image built successfully. Container runs." 
+          
+  # Third job: deploy to aws
+  deploy:
+      runs-on: ubuntu-latest
+      needs: [docker-image]
+
+      steps:
+
+      - name: Checkout source code
+        uses: actions/checkout@v1
+
+      - name: Generate deployment package
+        run: zip -r taskmaster-app-${{ github.sha }}.zip . -x '*.git*'
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v16 
+        with:
+          aws_access_key: ${{ secrets.ACTIONS_AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.ACTIONS_AWS_SECRET_ACCESS_KEY }}
+          application_name: taskmaster
+          environment_name: Taskmaster-env
+          version_label: ${{ github.sha }}
+          region: eu-west-2
+          deployment_package: taskmaster-app-${{ github.sha }}.zip
+        
+
+  
 
    
    
