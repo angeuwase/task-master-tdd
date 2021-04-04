@@ -54,12 +54,12 @@ jobs:
       - uses: actions/checkout@v2
       
       - name: Build docker image
-        run: docker build --tag taskmaster:${{github.run_number}} .
+        run: docker build --tag taskmaster:latest .
         
       - name: Test the image
         run: |
           # Run the docker container
-          docker run -t -d --name taskmaster_container -p 5000:5000 taskmaster:${{github.run_number}}
+          docker run -t -d --name taskmaster_container -p 5000:5000 taskmaster:latest
           # Confirm that the container is actually running by executing a command on it. 
           # A running container will respond with a list of the content of its working directory. 
           # Executing "exec" on a container that's not running will raise an Error response from daemon
@@ -69,9 +69,9 @@ jobs:
           DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: |
-          docker 
-          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-          docker push angeuwase1993/task-master:${{github.run_number}}
+          docker tag taskmaster:latest angeuwase1993/ange-projects-docker-images:latest
+          docker login -u $DOCKER_USER --password-stdin $DOCKER_PASSWORD
+          docker push angeuwase1993/ange-projects-docker-images:latest
           
       - name: Print job completion message
         run: echo "Docker image built successfully. Container runs." 
