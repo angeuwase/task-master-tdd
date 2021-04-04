@@ -1,0 +1,24 @@
+# Docker file to test the application 
+
+# Use official python docker base image
+FROM python:3.8-slim
+
+# Set the default working directory of the project on the container
+WORKDIR /app
+
+# Copy the requirements.txt file over to the container. 
+COPY requirements.txt requirements.txt
+
+# Install dependencies 
+RUN pip install -r requirements.txt
+
+# Install the project on the container.
+COPY . .
+
+# Configure the flask app for production
+ENV FLASK_ENV = development
+
+# Run tests
+RUN python -m pytest
+
+

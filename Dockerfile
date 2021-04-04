@@ -1,3 +1,6 @@
+# Dockerfile for production application
+
+
 # Use official python docker base image
 FROM python:3.8-slim
 
