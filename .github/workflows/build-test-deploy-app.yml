@@ -71,25 +71,12 @@ jobs:
         with:
           python-version: 3.8
       - name: Build docker image
-        run: docker build --file Dockerfile --tag taskmaster .
-      - name: Test docker image
+        run: docker build --tag taskmaster:latest .
+      - name: Check that image isnt broken (container runs)
         run: |
-          import time
-          from subprocess import check_call
-          from urllib.request import urlopen
-          check_call(
-              "docker run --rm --name=taskmaster_container -p 5000:5000 -d taskmaster".split()
-          )
-          # Wait for the server to start. A better implementation
-          # would poll in a loop:
-          time.sleep(5)
-          # Check if the server started (it'll throw an exception
-          # if not):
-          try:
-              urlopen("http://localhost:5000").read()
-          finally:
-              check_call("docker kill smk".split())
-          
+          docker run -t -d --name taskmaster_container -p 5000:5000 taskmaster:latest
+          docker exec taskmaster_container curl --retry 10 --retry-connrefused http://localhost:5000
+        
 
   
 
