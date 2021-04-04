@@ -8,10 +8,16 @@
 
 
 
-# This workflow will install Python dependencies, run tests and lint with a single version of Python.
-#If tests are passed it will zip the project and deploy it to AWS using Elastic Beanstalk.
 
-name: Build-test-deploy
+
+
+# This workflow will:
+# 1. Run unit and functional tests on the code
+# 2. Build the docker image 
+# 3. Test the docker image 
+# 4. Deploy to AWS using Elastic Beanstalk.
+
+name: Build-Test-Deploy
 
 on:
   push:
@@ -22,7 +28,7 @@ jobs:
   build-test:
 
     runs-on: ubuntu-latest
-
+    
     steps:
     - uses: actions/checkout@v2
     
@@ -39,9 +45,6 @@ jobs:
         pip install flake8 pytest
         pip install -r requirements.txt
         
-    - name: Build test docker image
-      run: docker build -f Dockerfile.test -t test_taskmaster:latest .
-        
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -54,9 +57,41 @@ jobs:
         python -m pytest
         
     - name: Print job completion message
-      run: echo "CI part finished successfully" 
+      run: echo "Code built and tested successfully" 
    
-  # Second job: package the project into a zip file and deploy to EB
+  # Second job: build and test docker image
+  docker-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Build docker image
+        run: docker build --file Dockerfile --tag taskmaster .
+      - name: Test docker image
+        run: |
+          import time
+          from subprocess import check_call
+          from urllib.request import urlopen
+          check_call(
+              "docker run --rm --name=taskmaster_container -p 8080:80 -d taskmaster".split()
+          )
+          # Wait for the server to start. A better implementation
+          # would poll in a loop:
+          time.sleep(5)
+          # Check if the server started (it'll throw an exception
+          # if not):
+          try:
+              urlopen("http://localhost:8080").read()
+          finally:
+              check_call("docker kill smk".split())
+          
+
+  
 
    
    
