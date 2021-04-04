@@ -13,7 +13,7 @@ def test_index_page(test_client):
     assert response.status_code == 200
     assert b'Task Master' in response.data
     assert b'A flask application developed using test-driven development principles.' in response.data
-    assert b'New text added' in response.data
+
 
 
 
