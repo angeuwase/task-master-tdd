@@ -4,6 +4,8 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
 import os
+from config import ProductionConfig
+from config import DevelopmentConfig
 
 
 # Instantiate Flask Extension Objects
@@ -22,8 +24,11 @@ def create_app():
     app = Flask(__name__)
 
     # Configure the flask application instance
-    config_type = os.getenv('CONFIG_TYPE', default='config.DevelopmentConfig')
-    app.config.from_object(config_type)
+    config_type = os.getenv('CONFIG_TYPE', default='DevelopmentConfig')
+    if config_type == 'ProductiontConfig':
+        app.config.from_object(ProductionConfig())
+    else:
+        app.config.from_object(DevelopmentConfig())
 
     # Configure logging
     configure_logging(app)

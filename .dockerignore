@@ -1,5 +1,4 @@
 .gitignore
-migrations/
 *.log
 *.sqlite
 *.sqlite3

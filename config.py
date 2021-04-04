@@ -32,3 +32,9 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     FLASK_ENV = 'production'
     SQLALCHEMY_DATABASE_URI = f"postgresql+psycopg2://{os.getenv('PROD_DATABASE_USERNAME')}:{os.getenv('PROD_DATABASE_PASSWORD')}@{os.getenv('PROD_DATABASE_ENDPOINT')}/taskmasterproduction"
+
+config = {
+'development': DevelopmentConfig,
+'testing': TestingConfig,
+'production': ProductionConfig,
+}

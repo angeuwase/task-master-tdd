@@ -23,9 +23,9 @@ ENV FLASK_ENV = production
 ENV CONFIG_TYPE = config.ProductionConfig
 
 # Run database migration
-RUN flask db init
-RUN flask db migrate -m 'final migration'
-RUN flask db upgrade
+#RUN flask db init
+#RUN flask db migrate -m 'final migration'
+#RUN flask db upgrade
 
 # Configure the container to listen to requests on port 5000. This is necessary so that Docker can configure the network in the container appropriately.
 EXPOSE 5000
