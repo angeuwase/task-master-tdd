@@ -1,7 +1,18 @@
+
+
+
+
+
+
+
+
+
+
 # This workflow will install Python dependencies, run tests and lint with a single version of Python.
 #If tests are passed it will zip the project and deploy it to AWS using Elastic Beanstalk.
 
 name: Build-test-deploy
+
 on:
   push:
     branches: [ main ]
@@ -14,34 +25,40 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
+        
     - name: Install dependencies
       run: |
         # create instance folder where log file and db file are saved. Its gitignored when code is pushed to master
         mkdir instance
         python -m pip install --upgrade pip
         pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install -r requirements.txt
+        
+    - name: Build test docker image
+      run: docker build -t -f Dockerfile.test test_taskmaster 
+        
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        
     - name: Test with pytest
       run: |
         python -m pytest
+        
     - name: Print job completion message
       run: echo "CI part finished successfully" 
+   
+  # Second job: package the project into a zip file and deploy to EB
 
-# configure environment variables for job 2
-env:
-   EB_S3_BUCKET_NAME	: "githubactions-deployment-packages"
-   EB_APPLICATION_NAME	: "taskmaster"
-   EB_ENVIRONMENT_NAME	: "Taskmaster-env"
-   EB_DEPLOY_PACKAGE_NAME : "taskmaster-app-${{ github.sha }}.zip "
-   EB_AWS_REGION_NAME : "eu-west-2"
+   
+   
+   
 
