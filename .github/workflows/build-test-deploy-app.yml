@@ -72,7 +72,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}
-          tags: latest, ${{ github.run_number}}, task-master
+          tags: task-master-latest-${{ github.run_number}}
           
       - name: Print job completion message
         run: echo "Docker image built successfully. Container runs." 
