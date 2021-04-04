@@ -70,7 +70,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-          docker push angeuwase1993/task-master-tdd:${{github.run_number}}
+          docker push angeuwase1993/task-master:${{github.run_number}}
           
       - name: Print job completion message
         run: echo "Docker image built successfully. Container runs." 
