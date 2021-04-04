@@ -63,15 +63,16 @@ jobs:
           # Confirm that the container is actually running by executing a command on it. 
           # A running container will respond with a list of the content of its working directory. 
           # Executing "exec" on a container that's not running will raise an Error response from daemon
-          docker exec taskmaster_container ls
-      - name: Push image to dockerhub
-        env:
-          DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-        run: |
-          docker tag taskmaster:latest angeuwase1993/ange-projects-docker-images:latest
-          docker login -u $DOCKER_USER --password-stdin $DOCKER_PASSWORD
-          docker push angeuwase1993/ange-projects-docker-images:latest
+          docker exec taskmaster_container ls  
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Push to Docker Hub
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }} 
+          tag_with_ref: true
           
       - name: Print job completion message
         run: echo "Docker image built successfully. Container runs." 
