@@ -31,5 +31,5 @@ RUN flask db upgrade
 EXPOSE 5000
 
 # Run the server with gunicorn
-ENTRYPOINT ["gunicorn", "-b", "0.0.0.0:5000", "app:application", "--workers=5"]
+ENTRYPOINT ["gunicorn", "-b", "0.0.0.0:5000", "application:application", "--workers=5"]
 
