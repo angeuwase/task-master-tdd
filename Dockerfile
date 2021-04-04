@@ -18,6 +18,7 @@ RUN pip install gunicorn
 COPY . .
 
 # Configure the flask app for production
+ENV FLASK_APP = application.py
 ENV FLASK_ENV = production
 ENV CONFIG_TYPE = config.ProductionConfig
 
@@ -30,5 +31,5 @@ RUN flask db upgrade
 EXPOSE 5000
 
 # Run the server with gunicorn
-ENTRYPOINT ["gunicorn", "-b", "0.0.0.0:5000", "app:app", "--workers=5"]
+ENTRYPOINT ["gunicorn", "-b", "0.0.0.0:5000", "app:application", "--workers=5"]
 
