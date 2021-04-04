@@ -1,7 +1,7 @@
 # This workflow will:
 # 1. Run unit and functional tests on the code
-# 2. Build the docker image and test the docker image 
-# 3. Deploy to AWS using Elastic Beanstalk.
+# 2. Build the docker image and test the docker image before pushing it to a dockerhub repository
+# 3. Deploy the application to AWS using Elastic Beanstalk.
 
 name: Build-Test-Deploy
 
@@ -45,7 +45,7 @@ jobs:
     - name: Print job completion message
       run: echo "Code built and tested successfully." 
    
-  # Second job: build and test docker image
+  # Second job: build and test docker image and if successfuly built, push it to a dockerhub repository
   docker-image:
     runs-on: ubuntu-latest
     needs: [build-test]
@@ -64,7 +64,14 @@ jobs:
           # A running container will respond with a list of the content of its working directory. 
           # Executing "exec" on a container that's not running will raise an Error response from daemon
           docker exec taskmaster_container ls
-        
+      - name: Push image to dockerhub
+        env:
+          DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+          docker push angeuwase1993/task-master-tdd:{{github.sha}}
+          
       - name: Print job completion message
         run: echo "Docker image built successfully. Container runs." 
           
