@@ -15,18 +15,20 @@ class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', default='A very terrible secret key.')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WTF_CSRF_ENABLED = True
+    
+
+    #SQLALCHEMY_DATABASE_URI = f"postgresql+psycopg2://{os.getenv('PROD_DATABASE_USERNAME')}:{os.getenv('PROD_DATABASE_PASSWORD')}@{os.getenv('PROD_DATABASE_ENDPOINT')}/'taskmasterproduction'"
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL',
-                                        default=f"sqlite:///{os.path.join(BASEDIR, 'instance', 'app.db')}")
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASEDIR, 'dev.sqlite')
+    
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URL',
-                                        default=f"sqlite:///{os.path.join(BASEDIR, 'instance', 'test.db')}")
     WTF_CSRF_ENABLED = False
-    #EXPLAIN_TEMPLATE_LOADING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASEDIR, 'test.sqlite')
 
 class ProductionConfig(Config):
     FLASK_ENV = 'production'
+    SQLALCHEMY_DATABASE_URI = f"postgresql+psycopg2://{os.getenv('PROD_DATABASE_USERNAME')}:{os.getenv('PROD_DATABASE_PASSWORD')}@{os.getenv('PROD_DATABASE_ENDPOINT')}/taskmasterproduction"

@@ -46,7 +46,7 @@ def configure_logging(app):
     from logging.handlers import RotatingFileHandler
 
     # Create a file handler object
-    file_handler = RotatingFileHandler('instance/task-master.log', maxBytes=16384, backupCount=20)
+    file_handler = RotatingFileHandler('task-master.log', maxBytes=16384, backupCount=20)
 
     # Set the logging level of the file handler object so that it logs INFO and up
     file_handler.setLevel(logging.INFO)
