@@ -40,7 +40,7 @@ jobs:
         pip install -r requirements.txt
         
     - name: Build test docker image
-      run: docker build -t -f Dockerfile.test test_taskmaster 
+      run: docker build -f Dockerfile.test test_taskmaster 
         
     - name: Lint with flake8
       run: |
